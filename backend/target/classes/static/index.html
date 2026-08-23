@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecuAudit Dashboard</title>
+<link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+
+<!-- Top Banner -->
+<header class="top-bar">
+  <div class="logo">&#x1f6e1; SecuAudit Web Dashboard</div>
+  <div class="header-right">
+    <span id="mcp-badge" class="mcp-offline">MCP: Disconnected</span>
+    <span id="attack-alert" class="attack-alert hidden">&#x1f6a8; Attack Blocked!</span>
+    <span id="clock">--</span>
+  </div>
+</header>
+
+<!-- Navigation -->
+<nav class="nav-bar">
+  <a href="#/" class="nav-link active" data-route="/">&#x1f3e0; System</a>
+  <a href="#/keyservers" class="nav-link" data-route="/keyservers">&#x1f511; Key Servers</a>
+  <a href="#/agents" class="nav-link" data-route="/agents">&#x1f916; Agents</a>
+  <a href="#/files" class="nav-link" data-route="/files">&#x1f4c1; Files</a>
+  <a href="#/audit-log" class="nav-link" data-route="/audit-log">&#x1f4cb; Audit Log</a>
+  <a href="#/blockchain" class="nav-link" data-route="/blockchain">&#x26d3; Blockchain</a>
+  <a href="#/mcp-monitor" class="nav-link mcp-nav" data-route="/mcp-monitor">&#x1f4e1; MCP Monitor</a>
+</nav>
+
+<!-- Main Content -->
+<main id="main-content"></main>
+
+<!-- Toast Container -->
+<div id="toast-container" class="toast-container"></div>
+
+<script src="/js/api.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>
