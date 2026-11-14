@@ -1,37 +1,39 @@
-## 智能体数据安全审计系统
-多个 AI Agent 共享同一数据平台，会带来很多数据不可信的安全风险。于是我们通过分布式管理密钥，远程数据可持有证明开发了智能体数据安全审计系统，从而去确保Agent可以基于可信数据进行分析和决策。
-本系统基于我们已发表的一篇sci论文（JCR Q3）核心思想实现，并在工程层面进行了扩展与优化，软件著作权已申请。
+# AI Agent Data Security Auditing System
 
-## 一、项目结构
+When multiple AI agents share the same data platform, untrusted data can introduce significant security risks. To address these risks, we developed an AI Agent Data Security Auditing System using distributed key management and remote provable data possession (PDP), helping ensure that agents analyze data and make decisions based on trustworthy data.
+
+The system implements the core ideas of our published SCI-indexed paper (JCR Q3), with further engineering enhancements and optimizations. An application for software copyright registration has been submitted.
+
+## 1. Project Structure
 
 ```text
 secuaudit-web/
-├── backend/                       # Java Spring Boot 主程序
-│   ├── pom.xml                    # Maven 配置
-│   ├── lib/                       # JPBC 密码学依赖
-│   ├── data/                      # H2 数据库文件
-│   ├── storage/                   # 上传文件、数据块和标签
+├── backend/                       # Main Java Spring Boot application
+│   ├── pom.xml                    # Maven configuration
+│   ├── lib/                       # JPBC cryptographic dependencies
+│   ├── data/                      # H2 database files
+│   ├── storage/                   # Uploaded files, data blocks, and tags
 │   └── src/main/
-│       ├── java/com/secuaudit/    # 后端代码
-│       └── resources/static/      # Web 前端页面、样式和脚本
-└── mcp-server/                    # 可选的 MCP Server
+│       ├── java/com/secuaudit/    # Backend source code
+│       └── resources/static/      # Web frontend pages, styles, and scripts
+└── mcp-server/                    # Optional MCP server
     ├── package.json
     └── index.js
 ```
 
-## 二、运行环境
+## 2. Requirements
 
-启动主程序需要：
+To run the main application:
 
-- JDK 17 或更高版本
-- Maven 3.8 或更高版本
+- JDK 17 or later
+- Maven 3.8 or later
 
-只有接入 MCP Server 时才需要：
+The following are required only when integrating the MCP server:
 
-- Node.js 18 或更高版本
+- Node.js 18 or later
 - npm
 
-在终端中检查环境：
+Check your environment in a terminal:
 
 ```powershell
 java -version
@@ -40,33 +42,33 @@ node -v
 npm -v
 ```
 
-## 三、快速启动
+## 3. Quick Start
 
 ### Windows PowerShell
 
-打开 PowerShell，进入后端目录：
+Open PowerShell and navigate to the backend directory:
 
 ```powershell
 cd ".\secuaudit\backend"
 mvn spring-boot:run
 ```
 
-看到下面的信息即表示启动成功：
+The following messages indicate that the application has started successfully:
 
 ```text
 Tomcat started on port 8080
 SecuAudit Web Dashboard Started
 ```
 
-浏览器访问：
+Open the following URLs in your browser:
 
-- 系统主页：http://localhost:8080
-- 系统状态接口：http://localhost:8080/api/system/status
-- H2 控制台：http://localhost:8080/h2-console
+- Home page: http://localhost:8080
+- System status API: http://localhost:8080/api/system/status
+- H2 console: http://localhost:8080/h2-console
 
-运行期间请不要关闭当前终端。需要停止服务时，在该终端按 `Ctrl + C`。
+Keep the terminal open while the application is running. To stop the service, press `Ctrl + C` in that terminal.
 
-> 请从 `backend` 目录启动。数据库路径 `./data` 和文件存储路径 `./storage` 都是相对于启动目录计算的。
+> Start the application from the `backend` directory. The database path `./data` and file storage path `./storage` are resolved relative to the directory from which the application is started.
 
 ### macOS / Linux
 
@@ -75,11 +77,11 @@ cd secuaudit-web/backend
 mvn spring-boot:run
 ```
 
-启动后同样访问 http://localhost:8080，按 `Ctrl + C` 停止。
+Once the application has started, visit http://localhost:8080. Press `Ctrl + C` to stop it.
 
-## 四、打包后运行
+## 4. Build and Run a JAR
 
-如果希望先构建 JAR 包再启动：
+To build a JAR package before starting the application:
 
 ```powershell
 cd ".\secuaudit\backend"
@@ -87,30 +89,30 @@ mvn clean package -DskipTests
 java -jar target/secuaudit-web-1.0.0.jar
 ```
 
-## 五、首次使用流程
+## 5. First-Time Workflow
 
-1. 打开 http://localhost:8080。
-2. 进入 **System** 页面，点击 **Initialize (DKG)** 初始化系统。
-3. 进入 **Users** 页面注册用户，并选择策略和有效期。
-4. 进入 **Files** 页面上传文件并关联用户。
-5. 点击 **Audit** 验证文件完整性。
-6. 点击 **Inject Fault** 模拟篡改，再次审计以验证检测能力。
-7. 在 **MCP Monitor** 页面查看 MCP 调用和实时审计事件。
+1. Open http://localhost:8080.
+2. Go to the **System** page and click **Initialize (DKG)** to initialize the system.
+3. Go to the **Users** page to register users and select their policies and validity periods.
+4. Go to the **Files** page to upload files and associate them with users.
+5. Click **Audit** to verify file integrity.
+6. Click **Inject Fault** to simulate tampering, then run another audit to verify the system's detection capability.
+7. View MCP calls and real-time audit events on the **MCP Monitor** page.
 
-系统初始化状态保存在内存中，重启应用后需要重新执行 **Initialize (DKG)**。审计记录使用 H2 数据库保存在 `backend/data` 中。
+The system's initialization state is held in memory. After restarting the application, you must run **Initialize (DKG)** again. Audit records are persisted in the H2 database under `backend/data`.
 
-## 六、可选：启用 MCP Server
+## 6. Optional: Enable the MCP Server
 
-MCP Server 通过标准输入/输出与 MCP 客户端通信，不需要手工单独常驻启动；客户端调用它之前，Spring Boot 主程序必须已经运行。
+The MCP server communicates with MCP clients through standard input/output (stdio). You do not need to start it manually as a separate persistent process. The Spring Boot application must already be running before an MCP client invokes the server.
 
-先安装 Node.js 依赖：
+First, install the Node.js dependencies:
 
 ```powershell
 cd ".\secuaudit\mcp-server"
 npm ci
 ```
 
-在 MCP 客户端配置中加入：
+Add the following to your MCP client configuration:
 
 ```json
 {
@@ -129,80 +131,80 @@ npm ci
 }
 ```
 
-重启 MCP 客户端后可以使用：
+Restart the MCP client to use the following tools:
 
-- `read_file`：审计文件完整性后读取内容
-- `query_db`：审计后执行数据库查询
-- `audit_status`：查看 MCP 审计统计
+- `read_file`: Reads file contents after auditing file integrity.
+- `query_db`: Executes database queries after auditing.
+- `audit_status`: Displays MCP audit statistics.
 
-## 七、H2 数据库连接参数
+## 7. H2 Database Connection Settings
 
-在 http://localhost:8080/h2-console 中填写：
+Enter the following settings at http://localhost:8080/h2-console:
 
-| 配置项 | 值 |
+| Setting | Value |
 | --- | --- |
 | Driver Class | `org.h2.Driver` |
 | JDBC URL | `jdbc:h2:file:./data/secuaudit` |
 | User Name | `sa` |
-| Password | 留空 |
+| Password | Leave blank |
 
-## 八、常用接口
+## 8. Common Endpoints
 
-| 接口 | 方法 | 说明 |
+| Endpoint | Method | Description |
 | --- | --- | --- |
-| `/api/system/status` | GET | 系统状态 |
-| `/api/system/init` | POST | 初始化 DKG |
-| `/api/keyservers` | GET | 密钥服务器列表 |
-| `/api/users` | GET | 用户列表 |
-| `/api/users/register` | POST | 注册用户 |
-| `/api/files` | GET | 文件列表 |
-| `/api/files/upload` | POST | 上传、分块并签名文件 |
-| `/api/files/{id}/audit` | POST | 审计文件 |
-| `/api/files/{id}/tamper` | POST | 模拟篡改 |
-| `/api/audit-log` | GET | 审计日志 |
-| `/api/audit-log/export` | GET | 导出 CSV |
-| `/api/blockchain` | GET | 区块链状态 |
-| `/api/mcp/read_file` | POST | MCP 文件读取接口 |
-| `/api/mcp/query_db` | POST | MCP 数据库查询接口 |
-| `/ws/audit` | WebSocket | 实时审计事件 |
+| `/api/system/status` | GET | Get system status |
+| `/api/system/init` | POST | Initialize DKG |
+| `/api/keyservers` | GET | List key servers |
+| `/api/users` | GET | List users |
+| `/api/users/register` | POST | Register a user |
+| `/api/files` | GET | List files |
+| `/api/files/upload` | POST | Upload a file, split it into blocks, and generate signatures |
+| `/api/files/{id}/audit` | POST | Audit a file |
+| `/api/files/{id}/tamper` | POST | Simulate tampering |
+| `/api/audit-log` | GET | Get audit logs |
+| `/api/audit-log/export` | GET | Export audit logs as CSV |
+| `/api/blockchain` | GET | Get blockchain status |
+| `/api/mcp/read_file` | POST | MCP file reading endpoint |
+| `/api/mcp/query_db` | POST | MCP database query endpoint |
+| `/ws/audit` | WebSocket | Receive real-time audit events |
 
-## 九、常见问题
+## 9. Troubleshooting
 
-### 1. 提示 `java` 或 `mvn` 不是命令
+### 1. `java` or `mvn` Is Not Recognized as a Command
 
-安装 JDK 17 和 Maven，并将它们的 `bin` 目录加入系统 `PATH`，然后重新打开终端。
+Install JDK 17 and Maven, add their `bin` directories to the system `PATH`, and then open a new terminal.
 
-### 2. 8080 端口已被占用
+### 2. Port 8080 Is Already in Use
 
-临时改用其他端口启动：
+Temporarily start the application on a different port:
 
 ```powershell
 mvn spring-boot:run "-Dspring-boot.run.arguments=--server.port=8081"
 ```
 
-然后访问 http://localhost:8081。MCP 配置中的 `SECUAUDIT_URL` 也要同步改成 `http://localhost:8081`。
+Then visit http://localhost:8081. Update `SECUAUDIT_URL` in the MCP configuration to `http://localhost:8081` as well.
 
-### 3. Maven 首次启动较慢
+### 3. The First Maven Startup Is Slow
 
-第一次运行需要下载 Spring Boot 等依赖，请保持网络连接并等待下载完成。后续启动会使用本地缓存。
+The first run downloads Spring Boot and other dependencies. Keep your internet connection active and wait for the downloads to finish. Subsequent runs use the local cache.
 
-### 4. 页面可以打开，但系统显示未初始化
+### 4. The Page Loads, but the System Is Not Initialized
 
-这是正常状态。进入 **System** 页面点击 **Initialize (DKG)** 即可。
+This is expected. Go to the **System** page and click **Initialize (DKG)**.
 
-### 5. MCP Server 无法连接后端
+### 5. The MCP Server Cannot Connect to the Backend
 
-确认以下事项：
+Check the following:
 
-- http://localhost:8080/api/system/status 可以正常打开；
-- 已在 `mcp-server` 目录执行 `npm ci`；
-- MCP 配置中的 `index.js` 使用正确的绝对路径；
-- 修改 MCP 配置后已重启客户端。
+- http://localhost:8080/api/system/status is accessible.
+- You have run `npm ci` in the `mcp-server` directory.
+- The MCP configuration uses the correct absolute path to `index.js`.
+- You have restarted the client after changing the MCP configuration.
 
-## 十、技术栈
+## 10. Technology Stack
 
-- Java 17、Spring Boot 3.2.1
-- Spring Data JPA、H2 Database
-- JPBC 2.0.0、门限 PDP、Shamir Secret Sharing、DKG
-- 原生 HTML/CSS/JavaScript、WebSocket
-- Node.js、`@modelcontextprotocol/sdk`
+- Java 17 and Spring Boot 3.2.1
+- Spring Data JPA and H2 Database
+- JPBC 2.0.0, threshold PDP, Shamir Secret Sharing, and DKG
+- Vanilla HTML/CSS/JavaScript and WebSocket
+- Node.js and `@modelcontextprotocol/sdk`
